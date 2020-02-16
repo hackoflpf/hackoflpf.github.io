@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>读书笔记</title>
+      <link href="/2020/02/16/1234/"/>
+      <url>/2020/02/16/1234/</url>
+      
+        <content type="html"><![CDATA[<h3 id="阅读公众号中朗曦科技关于crystal漏洞挖掘的东西，感觉蛮有意思的。"><a href="#阅读公众号中朗曦科技关于crystal漏洞挖掘的东西，感觉蛮有意思的。" class="headerlink" title="阅读公众号中朗曦科技关于crystal漏洞挖掘的东西，感觉蛮有意思的。"></a>阅读公众号中朗曦科技关于crystal漏洞挖掘的东西，感觉蛮有意思的。</h3><h4 id="利用crystal来分析cve-2018-1040，虽然过程比较曲折，但看下来基本上用自身实现的多种静态分析技术如数据流、控制流等挖掘到了对应的内核漏洞，遇到了诸如控制流中断、路径爆炸等问题都基本解决，但可以看出来静态的漏洞挖掘技术依旧很难通用，仍旧需要解决诸多问题，相对比较大众的fuzz来说，还有很大的提升空间。"><a href="#利用crystal来分析cve-2018-1040，虽然过程比较曲折，但看下来基本上用自身实现的多种静态分析技术如数据流、控制流等挖掘到了对应的内核漏洞，遇到了诸如控制流中断、路径爆炸等问题都基本解决，但可以看出来静态的漏洞挖掘技术依旧很难通用，仍旧需要解决诸多问题，相对比较大众的fuzz来说，还有很大的提升空间。" class="headerlink" title="利用crystal来分析cve-2018-1040，虽然过程比较曲折，但看下来基本上用自身实现的多种静态分析技术如数据流、控制流等挖掘到了对应的内核漏洞，遇到了诸如控制流中断、路径爆炸等问题都基本解决，但可以看出来静态的漏洞挖掘技术依旧很难通用，仍旧需要解决诸多问题，相对比较大众的fuzz来说，还有很大的提升空间。"></a>利用crystal来分析cve-2018-1040，虽然过程比较曲折，但看下来基本上用自身实现的多种静态分析技术如数据流、控制流等挖掘到了对应的内核漏洞，遇到了诸如控制流中断、路径爆炸等问题都基本解决，但可以看出来静态的漏洞挖掘技术依旧很难通用，仍旧需要解决诸多问题，相对比较大众的fuzz来说，还有很大的提升空间。</h4>]]></content>
+      
+      
+      <categories>
+          
+          <category> num1 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> reading note </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2020/02/16/hello-world/"/>
+      <url>/2020/02/16/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
