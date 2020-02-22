@@ -64,6 +64,7 @@ function utiliseBgColor() {
 /**
  * Buidling the caption html in an aritle
  */
+/**
 function buildImgCaption() {
   var images = $('.content').find('img');
 
@@ -72,7 +73,17 @@ function buildImgCaption() {
     $('.content').find("[alt='" + caption + "']").parent().append('<p class="image-caption">"' + caption + '"</p>');
   });
 }
+*/
+function buildImgCaption() {
+  var images = $('.content').find('img');
 
+  images.each(function () {
+    var caption = $(this).attr('alt');
+    if (caption!=="" && caption !==undefined){
+      $(this).parent().append('<p class="image-caption">"' + caption + '"</p>');
+    }
+  });
+}
 var Home = location.href,
   Pages = 4,
   xhr,
