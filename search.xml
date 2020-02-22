@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>afl初探</title>
+      <link href="/2020/02/22/afl_fuzz/"/>
+      <url>/2020/02/22/afl_fuzz/</url>
+      
+        <content type="html"><![CDATA[<h3 id="目前找到的关于winafl的研究"><a href="#目前找到的关于winafl的研究" class="headerlink" title="目前找到的关于winafl的研究"></a>目前找到的关于winafl的研究</h3><p><a href="https://paper.seebug.org/323/" target="_blank" rel="noopener">初识 Fuzzing 工具 WinAFL</a></p><p><a href="https://www.freebuf.com/articles/system/216437.html" target="_blank" rel="noopener">模糊测试工具WinAFL使用指南</a></p><p><a href="https://github.com/ivanfratric/winafl" target="_blank" rel="noopener">winafl 官方网站</a></p><p><a href="https://rk700.github.io/tags/#fuzzing" target="_blank" rel="noopener">winafl小试,包含了对afl的整体介绍以及对fuzz策略的改进</a></p><h3 id="关于fuzzing的简单介绍"><a href="#关于fuzzing的简单介绍" class="headerlink" title="关于fuzzing的简单介绍"></a>关于fuzzing的简单介绍</h3><p>按输入用例获取方式的不同，一般可分为基于突变的 dumb fuzzing 、基于生成的 smart fuzzing 和基于进化算法的 fuzzing 。</p><h3 id="使用winafl进行fuzz"><a href="#使用winafl进行fuzz" class="headerlink" title="使用winafl进行fuzz"></a>使用winafl进行fuzz</h3><p>在这里使用winafl来fuzz目标程序。Winafl是一个文件格式及协议漏洞的半自动发现工具，可以帮助我们发现各种使用特定格式文件的应用软件漏洞 。winafl的具体介绍可以查看官网或者其他对afl进行分析的博客。这里说明下我是用winafl的具体过程。</p><h4 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h4><p>我在使用winafl的时候遇到了一些问题，首先是关于DynamoRIO的，由于windows上的大部分应用程序都是预先编译好的没有源码的二进制程序，因此为了获取程序的覆盖率，winafl使用DynamoRIO进行动态插桩来获取fuzz过程中的程序覆盖率，从而调整变异策略。我在win10的虚拟机上使用了DynamoRIO的发行版，可以在<a href="https://github.com/DynamoRIO/dynamorio/wiki/Downloads" target="_blank" rel="noopener">这里</a>下到。但是发现程序并没有正常运行，通过运行ddrun notepad命令并没有启动notepad，但是通过-v进行详细输出并没有发现任何问题。显示如下：<br><img src="picture/afl1.png" alt="avatar"></p><p>可以看出，整个输出显示并没有任何问题，但是notepad并没有成功运行。由于没法确定问题到底出在什么地方，我只能以start failed，no response等关键字进行查找，但并没有找到原因。这里初步怀疑可能是我自己win10环境的问题，因此我换了多个虚拟机环境进行测试，同时在win10本地使用vs2017+cmake3.17进行编译，尝试运行后出现了其它问题，比如说可以对简单的notepad进行动态插桩，但对于复杂的应用似乎有点力不从心，连基本的GUI都无法正常显示，最后我重新安装了win7原版的虚拟机，并且可以使用DynamoRIO的发行版以及自己编译后的版本。但是为了找到更深层次的软件失败的原因，我使用了火绒剑、procmonitor等行为监控工具来对比成功与失败的不同，确实发现了一些问题。</p><p>首先，对官方提供的编译后的版本进行测试。通过火绒剑、procmonitor监控drrun.exe的运行，经过对比后，发现主要的不同在于drrun尝试打开目标程序后的行为。正确的行为是drrun通过CreateProcess来创建客户程序，并通过drinjectlib.dll向客户程序注入dynamorio.dll，由dynamorio.dll完成插桩前的一些初始化的工作，通过行为监控工具查看正常的注入结果，显示如下：</p><p><img src="picture/afl2.png" alt="avatar"></p><p>在失败的注入中，drrun在创建了客户端程序后，就直接推出了。此时依旧无法确定问题的真正原因，猜测是加载的dynamorio.dll出现了问题，导致应用程序崩溃，查看eventviewer，果然找到了对应的事件。</p><p><img src="picture/afl3.png" alt="avatar"></p><p>可以看出错误代码是c0000005，属于应用程序访问内存异常，接下来通过windbg来对drrun进行粗略的调试，发现问题出现在 <b style="color: #FF0000 "> <strong>dynamorio!ntdll_redir_fls_init</strong> </b>代码中，通过issue搜索发现有人提交过该问题，是由于在win10上获取特定结构体内容时同版本不一致导致了<b style="color: #FF0000 "> access  violation</b> ,在这里笔者并没有继续深究下去，因为通过自己编译的版本是可以在win10上运行的，但是在应对稍显复杂的程序上出现了问题。同时另外一个疑问就是为何在新安装的win7上可以正常使用，但在旧的虚拟机中却无法运行。在这里同样利用windbg进行调试，经过层层运行，最后发现了如下的可疑代码：</p><pre><code class="asm">16351c5f 16              push    ss16351c60 9c              pushfd16351c61 f0ff0530111b00  lock inc dword ptr ds:[1B1130h] ds:002b:001b1130=0000000016351c68 60              pushad16351c69 6865111b00      push    1B1165h16351c6e e9ebfcfdff      jmp     1633195e</code></pre><p>首先这段代码的地址并没有在相关模块附近，笔者猜测很可能是其它软件或者防火墙添加的hook代码，通过查看调用堆栈发现它最初来自于 <b style="color: red ">dtrampo.dll</b> ，突然想到这个模块似乎是火绒的模块，查看信息果然是，看来应该是火绒剑同DR的冲突导致了注入的代码无法正常运行，在这里只能先卸载火绒后，重新运行drrun进行测试，发现果然可以正常运行了，至此问题基本得到了解决。接下来就是利用winafl进行相关的测试了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> num1 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> reading note </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>读书笔记</title>
       <link href="/2020/02/16/1234/"/>
       <url>/2020/02/16/1234/</url>
