@@ -229,7 +229,7 @@ https://pdfium.googlesource.com/pdfium_tests/</code></pre>
 <p>最终经过长达9个多个小时的fuzz，出现一个崩溃，但是让我感到崩溃的是我当时为了调试DynamoRIO的异常崩溃设置windbg为即时调试器，导致jisupdf崩溃后windbg立刻附加，而winafl由于无法关闭子进程导致自己退出，这意味着又得重新开始fuzz了，:cry:。后续会详细分析下这个导致程序崩溃的样本，粗略的看了下，栈很有意思，可能是陷入了死循环中：</p>
 <p><img src="/images/afl16.png" alt=""></p>
 <p><img src="/images/afl17.png" alt=""></p>
-<p>既然已经崩溃了，刚好可以测试编写的afl_post_handler，将编译好的dll放到特定目录，并设置好对应的环境变量 <code>AFL_POST_LIBRARY</code>即可，经过测试发现刚开始速度确实非常的快，不会在弹出无法识别pdf文件格式的msgbox,速度提高了不少。加上fuzz程序仅仅在我的测试虚拟机中工作，在单核的情况下有这种速度已经非常不错了，后续可以提高下系统的性能，应该会更快。</p>
+<p>既然已经崩溃了，刚好可以测试编写的afl_post_handler，将编译好的dll放到特定目录，并设置好对应的环境变量 <code>AFL_POST_LIBRARY</code>即可，重新测试发现刚开始速度确实非常的快，不会在弹出无法识别pdf文件格式的msgbox,速度提高了不少。加上fuzz程序仅仅在我的测试虚拟机中工作，在单核的情况下有这种速度已经非常不错了，后续可以提高下系统的性能，应该会更快，等后面有空了会补上关于发现的crash的漏洞分析，目前先到这里。</p>
 <p><img src="/images/test3.png" alt=""></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
