@@ -102,7 +102,7 @@ winafl小试,包含了对afl的整体介绍以及对fuzz策略的,">
                 
                 <span>
                     <b class="iconfont icon-text2"></b> <i>Words count</i>
-                    9.9k
+                    10k
                 </span>
                 
                 
@@ -226,6 +226,9 @@ https://pdfium.googlesource.com/pdfium_tests/</code></pre>
 <p>当然，运气好的话就会这样：</p>
 <p><img src="/images/test2.PNG" alt=""></p>
 <p>两者的fuzz速度完全不一样，这一方面需要较好的样本，另一方面需要自己写好样本后处理程序，关于post_handler的介绍可以参考<a href="https://xz.aliyun.com/t/5108#toc-7" target="_blank" rel="noopener">这篇</a>文章，里面有着较为详细的说明，适当的阅读源码后会有更清晰的认识，这个在官方的说明文档中并没有提及，但在afl_post_library目录的文档中可以查到类似的实现以及说明。</p>
+<p>最终经过长达9个多个小时的fuzz，出现一个崩溃，但是让我感到崩溃的是我当时为了调试DynamoRIO的异常崩溃设置windbg为即时调试器，导致jisupdf崩溃后windbg立刻附加，而winafl由于无法关闭子进程导致自己退出，这意味着又得重新开始fuzz了，:cry:。后续会详细分析下这个导致程序崩溃的样本，粗略的看了下，栈很有意思，可能是陷入了死循环中：</p>
+<p><img src="/images/afl16.png" alt=""></p>
+<p><img src="/images/afl17.png" alt=""></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls"
